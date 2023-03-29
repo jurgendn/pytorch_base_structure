@@ -1,0 +1,14 @@
+version: "3.7"
+
+services:
+  model_name:
+    build:
+      context: .
+      dockerfile: .docker/Dockerfile
+    container_name: model_name
+    ports:
+      - "8996:8996"
+    env_file:
+      - ./.env
+    volumes:
+      - ./data:/home/working/data:ro

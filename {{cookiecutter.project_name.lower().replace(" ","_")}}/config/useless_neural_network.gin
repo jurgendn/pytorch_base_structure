@@ -1,0 +1,3 @@
+UselessNeuralNetwork.lr = 1e-3
+UselessNeuralNetwork.lr_scheduler_stepsize = 50
+UselessNeuralNetwork.lr_scheduler_gamma = 50
