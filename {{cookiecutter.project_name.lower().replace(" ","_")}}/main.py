@@ -1,1 +1,3 @@
-import gin
+from config import CFG
+
+print(CFG)

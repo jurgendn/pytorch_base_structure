@@ -27,20 +27,9 @@ class LightningClassification(LightningModule):
     def loss(self, input: Tensor, target: Tensor, **kwargs) -> Tensor:
         return 0
 
+    @abstractmethod
     def training_step(self, batch, batch_idx):
-        x, y = batch
-
-        pred = self.forward(x)
-        loss = self.loss(x=pred, y=y)
-        f1 = FM.f1_score(preds=pred, target=y)
-        recall = FM.recall(preds=pred, target=y)
-        precision = FM.precision(preds=pred, target=y)
-        return {
-            "loss": loss,
-            "f1": f1,
-            "recall": recall,
-            "precision": precision
-        }
+        pass
 
     @torch.no_grad
     def training_step_end(self, step_output):
@@ -63,6 +52,7 @@ class LightningClassification(LightningModule):
         self.log("training/recall", epoch_recall)
         self.log("training/precision", epoch_precision)
 
+    @abstractmethod
     @torch.no_grad
     def validation_step(self, batch, batch_idx):
         x, y = batch

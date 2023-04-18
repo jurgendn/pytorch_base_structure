@@ -1,4 +1,3 @@
-import gin
 from torch import Tensor, nn, optim
 from torch.nn import functional as F
 
@@ -6,7 +5,6 @@ from .base_model.classification import LightningClassification
 from .modules.sample_torch_module import UselessLayer
 
 
-@gin.configurable
 class UselessClassification(LightningClassification):
 
     def __init__(self, n_class: int, lr: float, **kwargs) -> None:
