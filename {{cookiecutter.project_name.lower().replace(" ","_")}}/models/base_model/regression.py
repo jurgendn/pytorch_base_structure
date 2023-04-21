@@ -31,6 +31,10 @@ class LightningRegression(LightningModule):
     def training_step(self, batch, batch_idx):
         pass
 
+    def __average(self, key: str, outputs: List[Dict]) -> Tensor:
+        target_arr = torch.Tensor([val[key] for val in outputs]).float()
+        return target_arr.mean()
+
     @torch.no_grad()
     def on_train_epoch_end(self) -> None:
         for key in self.log_value_list:
