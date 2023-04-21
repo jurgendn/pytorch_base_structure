@@ -1,11 +1,9 @@
 from abc import abstractmethod
-from typing import Any
+from typing import Any, Dict, List
 
 import torch
 from pytorch_lightning import LightningModule
 from torch import Tensor
-from torch.nn import functional as F
-from torchmetrics import functional as FM
 
 
 class LightningClassification(LightningModule):
@@ -13,7 +11,9 @@ class LightningClassification(LightningModule):
     @abstractmethod
     def __init__(self, *args, **kwargs) -> None:
         super(LightningClassification, self).__init__(*args, **kwargs)
-        pass
+        self.train_step_output: List[Dict] = []
+        self.validation_step_output: List[Dict] = []
+        self.log_value_list: List[str] = ['loss', 'f1', 'precision', 'recall']
 
     @abstractmethod
     def forward(self, *args, **kwargs) -> Any:
@@ -25,46 +25,31 @@ class LightningClassification(LightningModule):
 
     @abstractmethod
     def loss(self, input: Tensor, target: Tensor, **kwargs) -> Tensor:
-        return 0
+        pass
 
     @abstractmethod
     def training_step(self, batch, batch_idx):
         pass
 
-    @torch.no_grad
-    def training_step_end(self, step_output):
-        return step_output
+    def __average(self, key: str, outputs: List[Dict]) -> Tensor:
+        target_arr = torch.Tensor([val[key] for val in outputs]).float()
+        return target_arr.mean()
 
-    @torch.no_grad
-    def training_epoch_end(self, outputs):
-
-        def average(key: str) -> Tensor:
-            target_arr = torch.Tensor([val[key] for val in outputs]).float()
-            return target_arr.mean()
-
-        epoch_loss = average('loss')
-        epoch_f1 = average('f1')
-        epoch_recall = average('recall')
-        epoch_precision = average('precision')
-
-        self.log("training/loss", epoch_loss)
-        self.log("training/f1", epoch_f1)
-        self.log("training/recall", epoch_recall)
-        self.log("training/precision", epoch_precision)
+    @torch.no_grad()
+    def on_train_epoch_end(self) -> None:
+        for key in self.log_value_list:
+            val = self.__average(key=key, outputs=self.train_step_output)
+            log_name = f"training/{key}"
+            self.log(name=log_name, value=val)
 
     @abstractmethod
-    @torch.no_grad
+    @torch.no_grad()
     def validation_step(self, batch, batch_idx):
-        x, y = batch
+        pass
 
-        pred = self.forward(x)
-        loss = F.cross_entropy(input=pred, target=y)
-        f1 = FM.f1_score(preds=pred, target=y)
-        recall = FM.recall(preds=pred, target=y)
-        precision = FM.precision(preds=pred, target=y)
-        return {
-            "loss": loss,
-            "f1": f1,
-            "recall": recall,
-            "precision": precision
-        }
+    @torch.no_grad()
+    def on_validation_epoch_end(self) -> None:
+        for key in self.log_value_list:
+            val = self.__average(key=key, outputs=self.train_step_output)
+            log_name = f"val/{key}"
+            self.log(name=log_name, value=val)

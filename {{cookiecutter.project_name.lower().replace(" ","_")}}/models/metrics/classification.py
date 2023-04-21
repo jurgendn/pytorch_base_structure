@@ -4,7 +4,7 @@ import torch
 from torchmetrics import functional as FM
 
 
-def get_classification_metrics(
+def classification_metrics(
         preds: torch.Tensor,
         target: torch.Tensor,
         num_classes: int,
