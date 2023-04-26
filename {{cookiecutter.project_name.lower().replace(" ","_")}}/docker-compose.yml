@@ -12,3 +12,12 @@ services:
       - ./.env
     volumes:
       - ./data:/home/working/data:ro
+
+    # This part is used to enable GPU support
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [ gpu ]
