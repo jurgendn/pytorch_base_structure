@@ -36,9 +36,13 @@ class LightningClassification(LightningModule):
         return target_arr.mean()
 
     @torch.no_grad()
+    def on_train_epoch_start(self) -> None:
+        self.train_batch_output = []
+
+    @torch.no_grad()
     def on_train_epoch_end(self) -> None:
         for key in self.log_value_list:
-            val = self.__average(key=key, outputs=self.train_step_output)
+            val = self.__average(key=key, outputs=self.train_batch_output)
             log_name = f"training/{key}"
             self.log(name=log_name, value=val)
 
@@ -48,8 +52,12 @@ class LightningClassification(LightningModule):
         pass
 
     @torch.no_grad()
+    def on_validation_epoch_start(self) -> None:
+        self.validation_batch_output = []
+
+    @torch.no_grad()
     def on_validation_epoch_end(self) -> None:
         for key in self.log_value_list:
-            val = self.__average(key=key, outputs=self.train_step_output)
+            val = self.__average(key=key, outputs=self.validation_batch_output)
             log_name = f"val/{key}"
             self.log(name=log_name, value=val)
