@@ -11,8 +11,8 @@ class LightningClassification(LightningModule):
     @abstractmethod
     def __init__(self, *args, **kwargs) -> None:
         super(LightningClassification, self).__init__(*args, **kwargs)
-        self.train_step_output: List[Dict] = []
-        self.validation_step_output: List[Dict] = []
+        self.train_batch_output: List[Dict] = []
+        self.validation_batch_output: List[Dict] = []
         self.log_value_list: List[str] = ['loss', 'f1', 'precision', 'recall']
 
     @abstractmethod
