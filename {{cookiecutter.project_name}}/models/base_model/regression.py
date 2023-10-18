@@ -7,13 +7,12 @@ from torch import Tensor
 
 
 class LightningRegression(LightningModule):
-
     @abstractmethod
     def __init__(self, *args, **kwargs) -> None:
         super(LightningRegression, self).__init__(*args, **kwargs)
         self.train_step_output: List[Dict] = []
         self.validation_step_output: List[Dict] = []
-        self.log_value_list: List[str] = ['loss', 'mse', 'mape']
+        self.log_value_list: List[str] = ["loss", "mse", "mape"]
 
     @abstractmethod
     def forward(self, *args, **kwargs) -> Any:

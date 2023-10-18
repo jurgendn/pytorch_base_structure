@@ -7,7 +7,6 @@ from .modules.sample_torch_module import UselessLayer
 
 
 class UselessClassification(LightningClassification):
-
     def __init__(self, n_classes: int, lr: float, **kwargs) -> None:
         super(UselessClassification).__init__()
         self.save_hyperparameters()
@@ -30,11 +29,11 @@ class UselessClassification(LightningClassification):
 
         logits = self.forward(x)
         loss = self.loss(input=x, target=y)
-        metrics = classification_metrics(preds=logits,
-                                         target=y,
-                                         num_classes=self.n_classes)
+        metrics = classification_metrics(
+            preds=logits, target=y, num_classes=self.n_classes
+        )
 
-        self.train_batch_output.append({'loss': loss, **metrics})
+        self.train_batch_output.append({"loss": loss, **metrics})
         return loss
 
     def validation_step(self, batch, batch_idx):
@@ -42,9 +41,9 @@ class UselessClassification(LightningClassification):
 
         logits = self.forward(x)
         loss = self.loss(input=x, target=y)
-        metrics = classification_metrics(preds=logits,
-                                         target=y,
-                                         num_classes=self.n_classes)
+        metrics = classification_metrics(
+            preds=logits, target=y, num_classes=self.n_classes
+        )
 
-        self.validation_batch_output.append({'loss': loss, **metrics})
+        self.validation_batch_output.append({"loss": loss, **metrics})
         return loss
