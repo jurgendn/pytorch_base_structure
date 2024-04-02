@@ -1,4 +1,4 @@
-from typing import List, Literal
+from typing import Dict, Literal
 
 from pydantic import BaseModel, Field
 
@@ -30,8 +30,10 @@ class CallBacksConfig(BaseModel):
 
 
 class ModelConfig(BaseModel):
-    channels: List[int]
-    kernel: List[int]
+    model_name: str
+    backbone_name: str
+    attention_type: str
+    return_layers: Dict[str, str]
     n_classes: int
 
 
