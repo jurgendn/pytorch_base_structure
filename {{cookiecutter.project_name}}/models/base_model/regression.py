@@ -40,6 +40,7 @@ class LightningRegression(LightningModule):
             val = self.__average(key=key, outputs=self.train_step_output)
             log_name = f"training/{key}"
             self.log(name=log_name, value=val)
+        self.train_step_output.clear()
 
     @torch.no_grad()
     @abstractmethod
@@ -47,8 +48,9 @@ class LightningRegression(LightningModule):
         pass
 
     @torch.no_grad()
-    def validation_epoch_end(self, outputs):
+    def on_validation_epoch_end(self) -> None:
         for key in self.log_value_list:
             val = self.__average(key=key, outputs=self.validation_step_output)
             log_name = f"training/{key}"
             self.log(name=log_name, value=val)
+        self.validation_step_output.clear()

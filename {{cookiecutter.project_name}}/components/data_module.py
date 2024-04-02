@@ -8,8 +8,8 @@ from torch.utils.data import DataLoader, Dataset
 class SampleDataset(Dataset):
     def __init__(
         self,
-        x: Union[List, torch.Tensor],
-        y: Union[List, torch.Tensor],
+        x: torch.Tensor,
+        y: torch.Tensor,
         transforms: Optional[Callable] = None,
     ) -> None:
         super(SampleDataset, self).__init__()
@@ -17,8 +17,6 @@ class SampleDataset(Dataset):
         self.y = y
 
         if transforms is None:
-            # Replace None with some default transforms
-            # If image, could be an Resize and ToTensor
             self.transforms = lambda x: x
         else:
             self.transforms = transforms
@@ -37,8 +35,8 @@ class SampleDataset(Dataset):
 class SampleDataModule(LightningDataModule):
     def __init__(
         self,
-        x: Union[List, torch.Tensor],
-        y: Union[List, torch.Tensor],
+        x: torch.Tensor,
+        y: torch.Tensor,
         transforms: Optional[Callable] = None,
         val_ratio: float = 0,
         batch_size: int = 32,

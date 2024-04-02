@@ -1,0 +1,31 @@
+callbacks:
+  early_stopping_monitor: training/loss
+  early_stopping_min_delta: 3
+  early_stopping_patience: 10
+
+  model_checkpoint_dirpath: checkpoints/
+  model_checkpoint_mode: min
+  model_checkpoint_filename: model
+  model_checkpoint_monitor: training/f1
+  model_checkpoint_save_last: True
+
+  learning_rate_finder_min_lr: 1e-5
+  learning_rate_finder_max_lr: 1e-3
+  learning_rate_finder_num_training_steps: 100
+  learning_rate_finder_mode: exponential
+  learning_rate_finder_early_stop_threshold: 4.0
+  learning_rate_finder_update_attr: False
+  learning_rate_finder_attr_name: lr
+
+model_config:
+  channels: [1, 3, 8]
+  kernel: [1, 3]
+  n_classes: 10
+
+optimizer_config:
+  optimizer: Adam
+  lr: 0.001
+  weight_decay: 0.1
+
+  lr_scheduler_gamma: 0.1
+  lr_scheduler_last_epoch: -1

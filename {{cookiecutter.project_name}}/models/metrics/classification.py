@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, Literal
 
 import torch
 from torchmetrics import functional as FM
@@ -8,8 +8,8 @@ def classification_metrics(
     preds: torch.Tensor,
     target: torch.Tensor,
     num_classes: int,
-    average: str = "macro",
-    task: str = "multiclass",
+    average: Literal["micro", "macro", "weighted", "none"] = "macro",
+    task: Literal["binary", "multiclass", "multilabel"] = "multiclass",
 ) -> Dict[str, torch.Tensor]:
     """
     get_classification_metrics
