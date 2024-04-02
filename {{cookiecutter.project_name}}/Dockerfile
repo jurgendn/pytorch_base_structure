@@ -1,7 +1,8 @@
 FROM python:3.10.13-slim-bookworm
 
-RUN apt-get update && apt-get --no-install-recommends install -y cmake build-essential
-RUN apt-get clean
+RUN apt-get update \
+    && apt-get --no-install-recommends install -y cmake build-essential \
+    && apt-get clean
 
 RUN pip install --upgrade pip
 RUN pip install pytorch-lightning==2.1.0 torchmetrics==1.2.0
