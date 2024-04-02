@@ -55,7 +55,13 @@ class SampleDataModule(LightningDataModule):
         self.prepare_data()
 
     def setup(self, stage: Optional[str] = None) -> None:
-        pass
+        """
+        Install/Update prerequisite before creating the dataset
+
+        Args:
+            stage (Optional[str], optional): Create data set for different stage.
+                                             Defaults to None.
+        """
 
     def prepare_data(self) -> None:
         n_samples: int = len(self.x)
