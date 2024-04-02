@@ -14,6 +14,7 @@ class SequentialCNN(nn.Module):
             module_list.append(
                 nn.Conv2d(in_channels=c_in, out_channels=c_out, kernel_size=k)
             )
+            module_list.append(nn.LeakyReLU())
         self.module_list = nn.ModuleList(modules=module_list)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:

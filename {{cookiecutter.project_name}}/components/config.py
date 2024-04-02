@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Literal
 
 from pydantic import BaseModel, Field
 
@@ -24,6 +24,10 @@ class CallBacksConfig(BaseModel):
     learning_rate_finder_update_attr: bool = Field(default=True)
     learning_rate_finder_attr_name: str
 
+    learning_rate_monitor_logging_interval: Literal["step", "epoch"] = Field(
+        default="epoch"
+    )
+
 
 class ModelConfig(BaseModel):
     channels: List[int]
@@ -36,5 +40,15 @@ class OptimizerConfig(BaseModel):
     lr: float = Field(default=1e-3)
     weight_decay: float = Field(default=0.0)
 
-    lr_scheduler_gamma: float = 0.1
-    lr_scheduler_last_epoch: int = -1
+    lr_scheduler_mode: Literal["min", "max"] = "min"
+    lr_scheduler_factor: float = 0.2
+    lr_scheduler_patience: int = 5
+    lr_scheduler_threshold: float = 1e-4
+    lr_scheduler_threshold_mode: str = "rel"
+    lr_scheduler_min_lr: float = 0
+    lr_scheduler_eps: float = 1e-8
+
+
+class LoggerConfig(BaseModel):
+    save_dir: str = Field(default="lightning_logs/")
+    project: str

@@ -5,3 +5,4 @@ isort
 ipykernel
 pylama
 pydantic
+wandb

@@ -17,6 +17,7 @@ class MNISTModel(LightningClassification):
         self.model_config = model_config
         self.optimizer_config = optimizer_config
         self.n_classes = model_config.n_classes
+        self.lr = self.optimizer_config.lr
         self.backbone = SequentialCNN(
             channels=model_config.channels, kernel_size=model_config.kernel
         )
@@ -43,19 +44,21 @@ class MNISTModel(LightningClassification):
         caller = optimizer_list.get(self.optimizer_config.optimizer, optim.Adam)
         optimizer = caller(
             params=self.parameters(),
-            lr=self.optimizer_config.lr,
+            lr=self.lr,
             weight_decay=self.optimizer_config.weight_decay,
         )
-        lr_scheduler = optim.lr_scheduler.ExponentialLR(
+        lr_scheduler = optim.lr_scheduler.ReduceLROnPlateau(
             optimizer=optimizer,
-            gamma=self.optimizer_config.lr_scheduler_gamma,
-            last_epoch=self.optimizer_config.lr_scheduler_last_epoch,
+            mode=self.optimizer_config.lr_scheduler_mode,
+            factor=self.optimizer_config.lr_scheduler_factor,
+            patience=self.optimizer_config.lr_scheduler_patience,
+            threshold=self.optimizer_config.lr_scheduler_threshold,
+            threshold_mode=self.optimizer_config.lr_scheduler_threshold_mode,
+            min_lr=self.optimizer_config.lr_scheduler_min_lr,
+            eps=self.optimizer_config.lr_scheduler_eps,
         )
         return [optimizer], [
-            {
-                "scheduler": lr_scheduler,
-                "interval": "epoch",
-            }
+            {"scheduler": lr_scheduler, "interval": "epoch", "monitor": "training/loss"}
         ]
 
     def training_step(self, batch, batch_idx):

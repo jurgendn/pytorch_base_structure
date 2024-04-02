@@ -3,6 +3,8 @@ from pytorch_lightning.callbacks import (
     EarlyStopping,
     ModelCheckpoint,
     LearningRateFinder,
+    LearningRateMonitor,
+    
 )
 from components.config import CallBacksConfig
 
@@ -29,4 +31,13 @@ def get_callbacks(config: CallBacksConfig) -> List:
         update_attr=config.learning_rate_finder_update_attr,
         attr_name=config.learning_rate_finder_attr_name,
     )
-    return [early_stopping, model_checkpoint, learning_rate_finder]
+    learning_rate_monitor = LearningRateMonitor(
+        logging_interval=config.learning_rate_monitor_logging_interval,
+        log_weight_decay=True,
+    )
+    return [
+        early_stopping,
+        model_checkpoint,
+        learning_rate_finder,
+        learning_rate_monitor,
+    ]

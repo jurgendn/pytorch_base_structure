@@ -7,8 +7,14 @@ from torchvision import transforms as T
 from torchvision.datasets import MNIST
 
 from components.callbacks import get_callbacks
-from components.config import CallBacksConfig, ModelConfig, OptimizerConfig
+from components.config import (
+    CallBacksConfig,
+    ModelConfig,
+    OptimizerConfig,
+    LoggerConfig,
+)
 from models.model_lit import MNISTModel
+from pytorch_lightning.loggers import WandbLogger
 
 
 def train():
@@ -25,8 +31,8 @@ def train():
     callbacks_config = CallBacksConfig(**config["callbacks"])
     model_config = ModelConfig(**config["model_config"])
     optimizer_config = OptimizerConfig(**config["optimizer_config"])
+    logger_config = LoggerConfig(**config["logger_config"])
     callbacks = get_callbacks(config=callbacks_config)
-
     trainset = MNIST(
         root="data/MNIST", train=True, transform=T.ToTensor(), download=False
     )
@@ -38,11 +44,18 @@ def train():
     testloader = DataLoader(dataset=testset, batch_size=32)
 
     model = MNISTModel(model_config=model_config, optimizer_config=optimizer_config)
+    trainer_logger = WandbLogger(
+        save_dir=logger_config.save_dir,
+        project=logger_config.project,
+    )
+
     trainer = Trainer(
         accelerator=args.accelerator,
         devices=args.device,
+        logger=trainer_logger,
         callbacks=callbacks,
         max_epochs=int(args.max_epoch),
+        log_every_n_steps=1,
     )
 
     trainer.fit(model=model, train_dataloaders=trainloader, val_dataloaders=testloader)
