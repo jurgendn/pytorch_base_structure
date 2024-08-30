@@ -3,11 +3,13 @@ callbacks:
   early_stopping_min_delta: 3
   early_stopping_patience: 10
 
-  model_checkpoint_dirpath: checkpoints/
+  model_checkpoint_dirpath: checkpoints
+  model_checkpoint_filename: mnist_checkpoint
+  model_checkpoint_monitor: val_accuracy
   model_checkpoint_mode: min
-  model_checkpoint_filename: model
-  model_checkpoint_monitor: training/f1
-  model_checkpoint_save_last: True
+  model_checkpoint_save_best_only: True
+  model_checkpoint_period: 1
+  model_checkpoint_verbose: False
 
   learning_rate_finder_min_lr: 1e-5
   learning_rate_finder_max_lr: 1e-2

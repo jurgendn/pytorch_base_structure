@@ -11,10 +11,12 @@ class CallBacksConfig(BaseModel):
     model_checkpoint_dirpath: str = Field(
         description="Save the weight", default="./checkpoints/"
     )
-    model_checkpoint_mode: str
     model_checkpoint_filename: str
     model_checkpoint_monitor: str
-    model_checkpoint_save_last: bool = Field(default=True)
+    model_checkpoint_mode: Literal["min", "max"]
+    model_checkpoint_save_best_only: bool = Field(default=True)
+    model_checkpoint_period: int
+    model_checkpoint_verbose: bool
 
     learning_rate_finder_min_lr: float
     learning_rate_finder_max_lr: float
