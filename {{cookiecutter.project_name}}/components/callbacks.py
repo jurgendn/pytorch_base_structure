@@ -10,31 +10,102 @@ from components.trainer import Trainer
 
 
 class Callback:
+    @abstractmethod
     def on_train_begin(self, trainer: Trainer):
-        pass
+        """
+        on_train_begin
+
+        Args:
+            trainer (Trainer): _description_
+        """
 
     @abstractmethod
     def on_train_end(self, trainer: Trainer):
-        pass
+        """
+        on_train_end
+
+        Args:
+            trainer (Trainer): _description_
+        """
 
     @abstractmethod
     def on_epoch_begin(self, trainer: Trainer, epoch: int):
-        pass
+        """
+        on_epoch_begin
+
+        Args:
+            trainer (Trainer): _description_
+            epoch (int): _description_
+        """
 
     @abstractmethod
     def on_epoch_end(self, trainer: Trainer, epoch: int):
-        pass
+        """
+        on_epoch_end
+
+        Args:
+            trainer (Trainer): _description_
+            epoch (int): _description_
+        """
 
     @abstractmethod
     def on_batch_begin(self, trainer: Trainer, batch):
-        pass
+        """
+        on_batch_begin
+
+        Args:
+            trainer (Trainer): _description_
+            batch (_type_): _description_
+        """
 
     @abstractmethod
     def on_batch_end(self, trainer: Trainer, batch):
-        pass
+        """
+        on_batch_end
+
+        Args:
+            trainer (Trainer): _description_
+            batch (_type_): _description_
+
+        Returns:
+            _type_: _description_
+        """
 
 
 class ModelCheckpoint(Callback):
+    """
+    A callback for saving model checkpoints during training.
+
+    The `ModelCheckpoint` callback is used to save the model's state at specified intervals during training,
+    based on predefined criteria. It helps in preserving the best model configuration based on validation
+    performance and can also save models at regular intervals, like every epoch.
+
+    Attributes:
+        dirpath (str): Directory to save the model checkpoints.
+        filename (str): Filename to save the model checkpoints. Can contain formatting options like
+            `{epoch}` or `{step}` to include the epoch or step number in the filename.
+        monitor (str): The metric to monitor for saving checkpoints. Common choices are `val_loss`,
+            `val_accuracy`, etc.
+        save_best_only (bool): If `True`, only the model that shows the best performance on the monitored
+            metric will be saved. If `False`, all checkpoints will be saved.
+        mode (str): One of `min`, `max`. In `min` mode, the model checkpoint is saved when the monitored
+            metric has the minimum value. In `max` mode, the model is saved when the monitored metric has
+            the maximum value. Typically, use `min` for loss metrics and `max` for accuracy metrics.
+        save_weights_only (bool): If `True`, only the model weights will be saved (without optimizer state).
+            If `False`, the entire model including optimizer state will be saved.
+        verbose (bool): If `True`, prints messages when saving a checkpoint.
+
+    Methods:
+        on_epoch_end(epoch: int, logs: Dict[str, Any]) -> None:
+            Checks the monitored metric at the end of each epoch and saves a checkpoint if the metric
+            meets the specified conditions.
+        
+        on_train_end(logs: Dict[str, Any]) -> None:
+            Called at the end of training to save the final model checkpoint, if applicable.
+        
+        save_checkpoint(epoch: int, logs: Dict[str, Any], filepath: str) -> None:
+            Saves the model checkpoint to the specified filepath.
+    """
     def __init__(
         self,
         dirpath: str,
